@@ -1,0 +1,32 @@
+/* Paleta de Colores Pasteles para Tienda de Maquillaje */
+:root {
+  --pastel-pink: #FFD6E0;
+  --pastel-lavender: #E8D5E8;
+  --pastel-peach: #FFE5D9;
+  --pastel-mint: #D4EDDA;
+  --pastel-cream: #FFF8F0;
+  --pastel-rose: #F8C8DC;
+  --pastel-lilac: #DCD0FF;
+  --text-primary: #5C4B51;
+  --text-secondary: #8B7D82;
+  --white: #FFFFFF;
+  --shadow: rgba(92, 75, 81, 0.1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: linear-gradient(135deg, var(--pastel-cream) 0%, var(--pastel-pink) 100%);
+  min-height: 100vh;
+  color: var(--text-primary);
+}
+
+#root {
+  min-height: 100vh;
+}
+
