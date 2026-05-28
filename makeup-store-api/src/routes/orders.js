@@ -73,8 +73,18 @@ router.post('/', (req, res) => {
 
   try {
     const orderTransaction = db.transaction(() => {
-      db.prepare('INSERT OR IGNORE INTO users (email, name) VALUES (?, ?)').run(cleanedEmail, customerName);
+      // Intentar crear o actualizar el usuario
+      db.prepare(`
+        INSERT INTO users (email, name) VALUES (?, ?)
+        ON CONFLICT(email) DO UPDATE SET name = excluded.name
+      `).run(cleanedEmail, customerName);
+
       const user = db.prepare('SELECT id FROM users WHERE email = ?').get(cleanedEmail);
+      
+      if (!user) {
+        throw new Error('No se pudo crear o encontrar el usuario.');
+      }
+
       const orderResult = db.prepare('INSERT INTO orders (user_id, total, status) VALUES (?, ?, ?)').run(user.id, total, 'pendiente');
       const orderId = orderResult.lastInsertRowid;
 
@@ -92,7 +102,17 @@ router.post('/', (req, res) => {
     });
 
     const orderId = orderTransaction();
-    const order = db.prepare('SELECT id, total, status, created_at FROM orders WHERE id = ?').get(orderId);
+    const order = db.prepare(`
+      SELECT o.id, o.total, o.status, o.created_at,
+             u.name AS customer_name, u.email AS customer_email
+      FROM orders o
+      JOIN users u ON u.id = o.user_id
+      WHERE o.id = ?
+    `).get(orderId);
+
+    if (!order) {
+      return res.status(500).json({ error: 'Error al recuperar los datos de la orden creada.' });
+    }
 
     return res.status(201).json(order);
   } catch (error) {

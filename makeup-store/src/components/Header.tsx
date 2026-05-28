@@ -30,6 +30,7 @@ function Header() {
           <Link to="/" className={isActive('/') ? 'active' : ''}>Inicio</Link>
           <Link to="/productos" className={isActive('/productos') ? 'active' : ''}>Productos</Link>
           <Link to="/ofertas" className={isActive('/ofertas') ? 'active' : ''}>Ofertas</Link>
+          <Link to="/favoritos" className={isActive('/favoritos') ? 'active' : ''}>Favoritos</Link>
           <Link to="/contacto" className={isActive('/contacto') ? 'active' : ''}>Contacto</Link>
           <Link to="/pedidos" className={isActive('/pedidos') ? 'active' : ''}>Pedidos</Link>
           <Link to="/carrito" className={isActive('/carrito') ? 'active cart-link' : 'cart-link'}>🛒 Carrito ({totalItems})</Link>
@@ -56,6 +57,7 @@ function Header() {
           <Link to="/" className={isActive('/') ? 'active' : ''} onClick={closeMenu}>🏠 Inicio</Link>
           <Link to="/productos" className={isActive('/productos') ? 'active' : ''} onClick={closeMenu}>💄 Productos</Link>
           <Link to="/ofertas" className={isActive('/ofertas') ? 'active' : ''} onClick={closeMenu}>🔥 Ofertas</Link>
+          <Link to="/favoritos" className={isActive('/favoritos') ? 'active' : ''} onClick={closeMenu}>♥ Favoritos</Link>
           <Link to="/contacto" className={isActive('/contacto') ? 'active' : ''} onClick={closeMenu}>📬 Contacto</Link>
           <Link to="/pedidos" className={isActive('/pedidos') ? 'active' : ''} onClick={closeMenu}>📦 Pedidos</Link>
           <Link to="/carrito" className={isActive('/carrito') ? 'active' : ''} onClick={closeMenu}>🛒 Carrito ({totalItems})</Link>

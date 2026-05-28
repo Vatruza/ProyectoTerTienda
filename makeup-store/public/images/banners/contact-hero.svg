@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 700">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e8dcff"/>
+      <stop offset="100%" stop-color="#ffdbe8"/>
+    </linearGradient>
+  </defs>
+  <rect width="1100" height="700" fill="url(#bg)"/>
+  <rect x="220" y="130" width="660" height="430" rx="34" fill="#fff6fb"/>
+  <rect x="270" y="190" width="560" height="74" rx="20" fill="#f2e1ff"/>
+  <rect x="270" y="300" width="560" height="74" rx="20" fill="#ffe4ef"/>
+  <rect x="270" y="410" width="560" height="74" rx="20" fill="#f9ebd8"/>
+  <text x="230" y="640" fill="#6c567a" font-size="52" font-family="Poppins, Arial">Beauty Support Team</text>
+</svg>

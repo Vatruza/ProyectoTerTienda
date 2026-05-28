@@ -3,6 +3,7 @@ import type { FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { createOrder } from '../services/api';
+import { getProductImageSrc, hasImageUrl } from '../utils/productImages';
 import './Cart.css';
 
 function Cart() {
@@ -51,7 +52,15 @@ function Cart() {
       setEmail('');
       setAddress('');
     } catch (error) {
-      setErrorMessage(error instanceof Error ? error.message : 'Error al crear el pedido.');
+      const message = error instanceof Error ? error.message : 'Error al crear el pedido.';
+
+      // Local cart can contain stale product IDs after DB reset/reseed.
+      if (message.includes('Uno o más productos del pedido no existen')) {
+        clearCart();
+        setErrorMessage('Tu carrito tenía productos desactualizados. Se vació automáticamente; vuelve a agregar los productos.');
+      } else {
+        setErrorMessage(message);
+      }
     } finally {
       setLoading(false);
     }
@@ -83,7 +92,11 @@ function Cart() {
               <article key={item.product.id} className="cart-item">
                 <div className="cart-item-details">
                   <div className="cart-item-image">
-                    <span>{item.product.image}</span>
+                    {hasImageUrl(item.product.image) ? (
+                      <img src={getProductImageSrc(item.product.name, item.product.image)} alt={item.product.name} loading="lazy" />
+                    ) : (
+                      <span>{item.product.image}</span>
+                    )}
                   </div>
                   <div>
                     <h3>{item.product.name}</h3>

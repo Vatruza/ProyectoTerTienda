@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1200">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffdfe9"/>
+      <stop offset="100%" stop-color="#f0d7ff"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="1200" fill="url(#bg)"/>
+  <circle cx="940" cy="240" r="150" fill="#ffffff" opacity="0.35"/>
+  <rect x="220" y="230" width="760" height="760" rx="80" fill="#fff4f8" opacity="0.92"/>
+  <rect x="520" y="300" width="150" height="430" rx="36" fill="#f6b4cf" stroke="#d585a7" stroke-width="8"/>
+  <rect x="540" y="250" width="110" height="70" rx="16" fill="#2e3143"/>
+  <circle cx="430" cy="700" r="95" fill="#f7a8c4"/>
+  <circle cx="760" cy="700" r="95" fill="#d9b8ff"/>
+  <text x="150" y="1080" fill="#7d5b6d" font-size="70" font-family="Poppins, Arial">Makeup Studio Collection</text>
+</svg>

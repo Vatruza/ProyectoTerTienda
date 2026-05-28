@@ -1,6 +1,12 @@
 import { useState } from 'react';
 import './Contact.css';
 
+const supportChannels = [
+  { icon: '📍', title: 'Ubicación', text: 'Atención 100% online para todo el país.' },
+  { icon: '🕐', title: 'Horario', text: 'Lunes a sábado · 9:00 a.m. - 7:00 p.m.' },
+  { icon: '💬', title: 'Tiempo de respuesta', text: 'Respondemos en menos de 24 horas.' },
+];
+
 function Contact() {
   const [sent, setSent] = useState(false);
 
@@ -12,24 +18,29 @@ function Contact() {
   return (
     <div className="contact-page">
       <div className="contact-header">
-        <span className="contact-icon">📬</span>
-        <h1>Contáctanos</h1>
-        <p>¿Tienes alguna pregunta? Estamos aquí para ayudarte</p>
+        <div>
+          <span className="contact-icon">📬</span>
+          <h1>Contáctanos</h1>
+          <p>Te ayudamos a elegir, comprar y resolver cualquier duda de tu pedido.</p>
+          <div className="contact-header-badges">
+            <span>Asesoría de compra</span>
+            <span>Soporte rápido</span>
+            <span>Atención personalizada</span>
+          </div>
+        </div>
+        <img src="/images/banners/contact-hero.svg" alt="Atención al cliente de belleza" className="contact-hero-image" />
       </div>
 
       <div className="contact-content">
         <div className="contact-left">
           <div className="contact-info">
-            <div className="info-card">
-              <span>📍</span>
-              <h3>Ubicación</h3>
-              <p>Tienda 100% online</p>
-            </div>
-            <div className="info-card">
-              <span>🕐</span>
-              <h3>Horario</h3>
-              <p>Lun - Sáb: 9am - 7pm</p>
-            </div>
+            {supportChannels.map((channel) => (
+              <div key={channel.title} className="info-card">
+                <span>{channel.icon}</span>
+                <h3>{channel.title}</h3>
+                <p>{channel.text}</p>
+              </div>
+            ))}
           </div>
 
           <div className="social-section">
@@ -71,6 +82,14 @@ function Contact() {
                 </div>
               </a>
             </div>
+          </div>
+
+          <div className="contact-note">
+            <h4>¿Necesitas una recomendación?</h4>
+            <p>
+              Cuéntanos tu tipo de piel y el look que buscas. Te sugerimos productos y combinaciones
+              en un mensaje personalizado.
+            </p>
           </div>
         </div>
 

@@ -5,6 +5,7 @@ import Products from './pages/Products'
 import Offers from './pages/Offers'
 import Contact from './pages/Contact'
 import Cart from './pages/Cart'
+import Favorites from './pages/Favorites'
 import OrderHistory from './pages/OrderHistory'
 import { CartProvider } from './context/CartContext'
 import './App.css'
@@ -21,6 +22,7 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/productos" element={<Products />} />
               <Route path="/ofertas" element={<Offers />} />
+              <Route path="/favoritos" element={<Favorites />} />
               <Route path="/contacto" element={<Contact />} />
               <Route path="/carrito" element={<Cart />} />
               <Route path="/pedidos" element={<OrderHistory />} />

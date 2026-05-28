@@ -16,6 +16,9 @@ function Offers() {
   const [products, setProducts] = useState<OfferProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<'all' | 'flash' | 'weekly' | '2x1'>('all');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortBy, setSortBy] = useState<'featured' | 'discount' | 'price-low' | 'price-high'>('featured');
+  const [promoCopied, setPromoCopied] = useState(false);
   const [countdown, setCountdown] = useState({ hours: 5, minutes: 42, seconds: 17 });
 
   useEffect(() => {
@@ -56,7 +59,40 @@ function Offers() {
 
   const pad = (n: number) => n.toString().padStart(2, '0');
 
-  const filtered = filter === 'all' ? products : products.filter(p => p.offerType === filter);
+  const handleCopyPromo = async () => {
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText('BELLEZA20');
+      }
+      setPromoCopied(true);
+      window.setTimeout(() => setPromoCopied(false), 2200);
+    } catch {
+      setPromoCopied(false);
+    }
+  };
+
+  const filtered = products
+    .filter(p => (filter === 'all' ? true : p.offerType === filter))
+    .filter(p => {
+      if (!searchTerm.trim()) return true;
+      const query = searchTerm.toLowerCase();
+      return (
+        p.name.toLowerCase().includes(query) ||
+        p.brand.toLowerCase().includes(query) ||
+        p.category.toLowerCase().includes(query)
+      );
+    })
+    .sort((a, b) => {
+      if (sortBy === 'discount') return b.discount - a.discount;
+      if (sortBy === 'price-low') return a.price - b.price;
+      if (sortBy === 'price-high') return b.price - a.price;
+      return a.id - b.id;
+    });
+
+  const totalSavings = filtered.reduce(
+    (sum, product) => sum + (product.originalPrice - product.price),
+    0
+  );
 
   const offerLabel = (type: 'flash' | 'weekly' | '2x1') =>
     type === 'flash' ? '⚡ Flash' : type === '2x1' ? '🎁 2×1' : '🗓️ Semanal';
@@ -66,9 +102,14 @@ function Offers() {
   return (
     <div className="offers-page">
       <div className="offers-banner">
-        <span className="offers-emoji">🔥</span>
-        <h1>Ofertas Especiales</h1>
-        <p>Aprovecha los mejores descuentos en tus productos favoritos</p>
+        <div className="offers-banner-grid">
+          <div className="offers-banner-copy">
+            <span className="offers-emoji">🔥</span>
+            <h1>Ofertas Especiales</h1>
+            <p>Aprovecha los mejores descuentos en tus productos favoritos</p>
+          </div>
+          <img src="/images/banners/offers-hero.svg" alt="Colección de maquillaje en oferta" className="offers-banner-image" />
+        </div>
         <div className="offers-badges">
           <span className="discount-badge">Hasta 50% OFF</span>
           <span className="discount-badge">Envío gratis</span>
@@ -105,7 +146,47 @@ function Offers() {
             <h3>Código promocional</h3>
             <p>Usa el código <strong className="promo-code">BELLEZA20</strong> para un 20% extra en tu primera compra</p>
           </div>
+          <button type="button" className={`promo-copy-btn ${promoCopied ? 'copied' : ''}`} onClick={handleCopyPromo}>
+            {promoCopied ? 'Copiado' : 'Copiar código'}
+          </button>
         </div>
+      </div>
+
+      <div className="offers-toolbar">
+        <div className="offers-search">
+          <label htmlFor="offers-search">Buscar</label>
+          <input
+            id="offers-search"
+            type="search"
+            placeholder="Producto, marca o categoría"
+            value={searchTerm}
+            onChange={(event) => setSearchTerm(event.target.value)}
+          />
+        </div>
+        <label className="offers-sort">
+          Ordenar por
+          <select value={sortBy} onChange={(event) => setSortBy(event.target.value as 'featured' | 'discount' | 'price-low' | 'price-high')}>
+            <option value="featured">Destacados</option>
+            <option value="discount">Mayor descuento</option>
+            <option value="price-low">Precio menor</option>
+            <option value="price-high">Precio mayor</option>
+          </select>
+        </label>
+      </div>
+
+      <div className="offers-stats">
+        <article>
+          <strong>{filtered.length}</strong>
+          <span>Ofertas activas</span>
+        </article>
+        <article>
+          <strong>${totalSavings.toFixed(2)}</strong>
+          <span>Ahorro potencial</span>
+        </article>
+        <article>
+          <strong>{filter === 'all' ? 'Todas' : offerLabel(filter)}</strong>
+          <span>Tipo seleccionado</span>
+        </article>
       </div>
 
       {/* Filter Tabs */}
@@ -129,6 +210,7 @@ function Offers() {
                 <div className="original-price">
                   Antes: <s>${product.originalPrice.toFixed(2)}</s>
                 </div>
+                <p className="offer-savings">Ahorras ${(product.originalPrice - product.price).toFixed(2)}</p>
               </div>
             ))}
           </div>

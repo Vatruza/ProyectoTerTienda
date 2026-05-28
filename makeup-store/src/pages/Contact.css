@@ -5,7 +5,13 @@
 }
 
 .contact-header {
-  text-align: center;
+  background: linear-gradient(135deg, rgba(255, 243, 236, 0.95) 0%, rgba(255, 224, 236, 0.95) 55%, rgba(234, 220, 238, 0.95) 100%);
+  border-radius: 26px;
+  padding: 1.6rem;
+  display: grid;
+  grid-template-columns: 1fr 290px;
+  gap: 1rem;
+  align-items: center;
   margin-bottom: 2.5rem;
 }
 
@@ -24,6 +30,30 @@
 .contact-header p {
   color: var(--text-secondary);
   font-size: 1.05rem;
+}
+
+.contact-header-badges {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.contact-header-badges span {
+  background: rgba(255, 255, 255, 0.75);
+  padding: 0.45rem 0.8rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.contact-hero-image {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 16px;
+  box-shadow: 0 10px 24px rgba(92, 75, 81, 0.18);
 }
 
 .contact-content {
@@ -47,10 +77,10 @@
 }
 
 .info-card {
-  background: linear-gradient(135deg, var(--pastel-cream) 0%, var(--pastel-pink) 100%);
+  background: linear-gradient(135deg, #fff7ef 0%, #ffe8f0 100%);
   border-radius: 16px;
   padding: 1.3rem;
-  text-align: center;
+  text-align: left;
   transition: transform 0.3s ease;
 }
 
@@ -99,6 +129,23 @@
   color: var(--text-primary);
   transition: all 0.3s ease;
   border: 2px solid transparent;
+}
+
+.contact-note {
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 16px;
+  padding: 1rem;
+  box-shadow: 0 4px 15px rgba(92, 75, 81, 0.09);
+}
+
+.contact-note h4 {
+  margin-bottom: 0.35rem;
+}
+
+.contact-note p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.55;
 }
 
 .social-link:hover {
@@ -166,7 +213,7 @@
   background: var(--white);
   border-radius: 20px;
   padding: 2rem;
-  box-shadow: 0 6px 25px var(--shadow);
+  box-shadow: 0 12px 30px rgba(92, 75, 81, 0.12);
 }
 
 .contact-form h2 {
@@ -277,6 +324,15 @@
 
   .contact-header h1 {
     font-size: 1.6rem;
+  }
+
+  .contact-header {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .contact-header-badges {
+    justify-content: center;
   }
 
   .contact-content {

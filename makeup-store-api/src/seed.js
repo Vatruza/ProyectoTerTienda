@@ -41,27 +41,38 @@ function seed() {
 
   // ─── Productos (los 12 del frontend actual) ───
   const products = [
-    { name: 'Ruby Woo Lipstick', brand: 'MAC', price: 22.00, image: '💄', category: 'labiales' },
-    { name: 'Naked Palette', brand: 'Urban Decay', price: 54.00, image: '🎨', category: 'sombras' },
-    { name: 'Flawless Filter', brand: 'Charlotte Tilbury', price: 46.00, image: '✨', category: 'bases' },
-    { name: 'Orgasm Blush', brand: 'NARS', price: 30.00, image: '🌸', category: 'rubores' },
-    { name: 'Better Than Sex', brand: 'Too Faced', price: 28.00, image: '👁️', category: 'mascaras' },
-    { name: 'Gloss Bomb', brand: 'Fenty Beauty', price: 20.00, image: '💋', category: 'brillos' },
-    { name: 'Fit Me Powder', brand: 'Maybelline', price: 8.99, image: '🪞', category: 'polvos' },
-    { name: 'True Match Foundation', brand: "L'Oréal", price: 12.99, image: '🧴', category: 'bases' },
-    { name: 'Butter Gloss', brand: 'NYX', price: 5.99, image: '🍯', category: 'brillos' },
-    { name: 'Hoola Bronzer', brand: 'Benefit', price: 30.00, image: '☀️', category: 'bronceadores' },
-    { name: 'Velvet Teddy', brand: 'MAC', price: 21.00, image: '🧸', category: 'labiales' },
-    { name: 'Born This Way', brand: 'Too Faced', price: 40.00, image: '💫', category: 'bases' },
+    { name: 'Ruby Woo Lipstick', brand: 'MAC', price: 22.00, image: '/images/products/lipstick.svg', category: 'labiales' },
+    { name: 'Naked Palette', brand: 'Urban Decay', price: 54.00, image: '/images/products/palette.svg', category: 'sombras' },
+    { name: 'Flawless Filter', brand: 'Charlotte Tilbury', price: 46.00, image: '/images/products/foundation.svg', category: 'bases' },
+    { name: 'Orgasm Blush', brand: 'NARS', price: 30.00, image: '/images/products/blush.svg', category: 'rubores' },
+    { name: 'Better Than Sex', brand: 'Too Faced', price: 28.00, image: '/images/products/mascara.svg', category: 'mascaras' },
+    { name: 'Gloss Bomb', brand: 'Fenty Beauty', price: 20.00, image: '/images/products/gloss.svg', category: 'brillos' },
+    { name: 'Fit Me Powder', brand: 'Maybelline', price: 8.99, image: '/images/products/bronzer.svg', category: 'polvos' },
+    { name: 'True Match Foundation', brand: "L'Oréal", price: 12.99, image: '/images/products/foundation.svg', category: 'bases' },
+    { name: 'Butter Gloss', brand: 'NYX', price: 5.99, image: '/images/products/gloss.svg', category: 'brillos' },
+    { name: 'Hoola Bronzer', brand: 'Benefit', price: 30.00, image: '/images/products/bronzer.svg', category: 'bronceadores' },
+    { name: 'Velvet Teddy', brand: 'MAC', price: 21.00, image: '/images/products/lipstick.svg', category: 'labiales' },
+    { name: 'Born This Way', brand: 'Too Faced', price: 40.00, image: '/images/products/foundation.svg', category: 'bases' },
   ];
 
   const insertProduct = db.prepare(`
     INSERT OR IGNORE INTO products (name, brand_id, category_id, price, image, stock)
     VALUES (?, ?, ?, ?, ?, ?)
   `);
+  const findProductByName = db.prepare('SELECT id FROM products WHERE name = ? LIMIT 1');
+  const updateProductByName = db.prepare(`
+    UPDATE products
+    SET brand_id = ?, category_id = ?, price = ?, image = ?, stock = ?, active = 1, updated_at = datetime('now')
+    WHERE name = ?
+  `);
 
   for (const p of products) {
-    insertProduct.run(p.name, getBrandId(p.brand), getCategoryId(p.category), p.price, p.image, 50);
+    const existing = findProductByName.get(p.name);
+    if (existing) {
+      updateProductByName.run(getBrandId(p.brand), getCategoryId(p.category), p.price, p.image, 50, p.name);
+    } else {
+      insertProduct.run(p.name, getBrandId(p.brand), getCategoryId(p.category), p.price, p.image, 50);
+    }
   }
   console.log(`✅ ${products.length} productos insertados`);
 
@@ -132,9 +143,34 @@ function seed() {
     INSERT OR IGNORE INTO recommendations (name, brand, description, image, skin_tone, skin_type)
     VALUES (?, ?, ?, ?, ?, ?)
   `);
+  const findRecommendation = db.prepare(`
+    SELECT id FROM recommendations
+    WHERE name = ? AND skin_tone = ? AND skin_type = ?
+    LIMIT 1
+  `);
+  const updateRecommendation = db.prepare(`
+    UPDATE recommendations
+    SET brand = ?, description = ?, image = ?
+    WHERE name = ? AND skin_tone = ? AND skin_type = ?
+  `);
+  const removeDuplicateRecommendations = db.prepare(`
+    DELETE FROM recommendations
+    WHERE id NOT IN (
+      SELECT MIN(id)
+      FROM recommendations
+      GROUP BY name, skin_tone, skin_type
+    )
+  `);
+
+  removeDuplicateRecommendations.run();
 
   for (const r of recommendations) {
-    insertRecommendation.run(r.name, r.brand, r.description, r.image, r.skin_tone, r.skin_type);
+    const existing = findRecommendation.get(r.name, r.skin_tone, r.skin_type);
+    if (existing) {
+      updateRecommendation.run(r.brand, r.description, r.image, r.name, r.skin_tone, r.skin_type);
+    } else {
+      insertRecommendation.run(r.name, r.brand, r.description, r.image, r.skin_tone, r.skin_type);
+    }
   }
   console.log(`✅ ${recommendations.length} recomendaciones insertadas`);
 

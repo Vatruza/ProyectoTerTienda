@@ -54,7 +54,7 @@ function createDatabase() {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       email TEXT NOT NULL UNIQUE,
       name TEXT NOT NULL,
-      password_hash TEXT NOT NULL,
+      password_hash TEXT,
       skin_tone TEXT CHECK(skin_tone IN ('claro', 'medio', 'oscuro')),
       skin_type TEXT CHECK(skin_type IN ('seca', 'grasa', 'mixta', 'normal')),
       created_at TEXT DEFAULT (datetime('now'))
