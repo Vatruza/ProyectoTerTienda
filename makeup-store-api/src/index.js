@@ -9,11 +9,26 @@ const { getDatabase } = require('./database');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+const allowedOrigins = (process.env.CORS_ORIGINS || '')
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean);
 
 // Middleware
 app.use(cors({
   origin: function (origin, callback) {
-    callback(null, true);
+    // Allow non-browser clients and same-origin requests without Origin header.
+    if (!origin) {
+      callback(null, true);
+      return;
+    }
+
+    if (allowedOrigins.length === 0 || allowedOrigins.includes(origin)) {
+      callback(null, true);
+      return;
+    }
+
+    callback(new Error('Not allowed by CORS'));
   },
 }));
 app.use(express.json());
@@ -36,6 +51,10 @@ app.get('/', (req, res) => {
       recommendations: '/api/recommendations?skin_tone=claro&skin_type=seca',
     }
   });
+});
+
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok' });
 });
 
 // Inicializar base de datos y arrancar servidor
